@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<script>
+  //bus js
+
+  import Vue from 'vue'
+  const Bus = new Vue()
+  export default Bus
+  
+  
+  // component1
+
+  import Bus from './Bus'
+
+  export default {
+    data() {
+      return {
+        .........
+      }
+    },
+    methods: {
+      ....
+    Bus.$emit('log', 120)
+  },
+  }
+  
+  // component2
+
+  import Bus from './Bus'
+
+  export default {
+    data() {
+      return {
+        .........
+      }
+    },
+    mounted () {
+      Bus.$on('log', content => {
+        console.log(content)
+      });
+    }
+  }
+  
+  
+  
+  // 推荐 注入根对象，在子组件中通过this.$root.Bus.$on(),this.$root.Bus.$emit()来调用
+
+  import Vue from 'vue'
+  const Bus = new Vue()
+
+  var app= new Vue({
+    el:'#app',
+    data:{
+      Bus
+    }
+
+  })
+</script>
+
+</body>
+</html>

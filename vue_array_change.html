@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<script>
+  const methodsToPatch = [
+    'push',
+    'pop',
+    'shift',
+    'unshift',
+    'splice',
+    'sort',
+    'reverse'
+  ]
+  const arrayProto = Array.prototype;
+  // 继承原有数组的方法
+  const arrayMethods = Object.create(arrayProto)
+  methodsToPatch.forEach(method => {
+    // 缓存原生数组方法
+    const original = arrayProto[method]
+    arrayMethods[method] = function (...args) {
+      const result = original.apply(this, args)
+      console.log('执行响应式功能')
+      return result
+    }
+  })
+
+  var arr = []
+
+  console.log(arrayMethods);
+  arr.__proto__ = arrayMethods;
+  
+  
+  arr.push(1)
+
+</script>
+</body>
+</html>

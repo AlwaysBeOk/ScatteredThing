@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+</head>
+
+
+<style>
+  .box{
+    background-color: deepskyblue;
+    width: .5rem;
+    height: 40px;
+  }
+</style>
+
+<script>
+  document.documentElement.style.fontSize = document.documentElement.clientWidth / 3.75 + 'px';
+
+  window.addEventListener('resize', function () {
+    console.log(123);
+    document.documentElement.style.fontSize = document.documentElement.clientWidth / 3.75 + 'px';
+  })
+  document.addEventListener('DOMContentLoaded', function () {
+    document.documentElement.style.fontSize = document.documentElement.clientWidth / 3.75 + 'px';
+  })
+
+//"use strict";
+//(function (doc, win) {
+//  var docEl = doc.documentElement,
+//    resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+//    recalc = function () {
+//      var clientWidth = docEl.clientWidth;
+//      if (!clientWidth) return;
+//      docEl.style.fontSize = (clientWidth / 3.75) + 'px';
+//    };
+//
+//  if (!doc.addEventListener) return;
+//  win.addEventListener(resizeEvt, recalc, false);
+//  doc.addEventListener('DOMContentLoaded', recalc, false);
+//})(document, window);
+
+</script>
+<body>
+
+<div class="box">
+
+</div>
+
+</body>
+</html>

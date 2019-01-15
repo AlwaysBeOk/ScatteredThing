@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<script>
+//  function add(arg) {
+//    var that = this;
+//    that.count = arg;
+//
+//    that.add = function (arg) {
+//      that.count += arg;
+//      return that;
+//    }
+//
+//    that.sum = function () {
+//      return that.count;
+//    }
+//
+//    return that;
+//  }
+//
+//  document.write(add(1).add(2).add(3).sum())
+
+
+//  function add(arg) {
+//    var sum = arg, fun = function (arg) {
+//      sum += arg;
+//      return fun;
+//    };
+//
+//    fun.toString = fun.valueOf = function () {
+//      return sum;
+//    };
+//
+//    return fun;
+//  }
+//
+//  document.write(add(1)(2)(3)(4))
+
+  
+  var o = {
+    a: 0,
+    toString: function () {
+      this.a += 1;
+      return this.a;
+    }
+  }
+
+  if(o ==1 && o == 2 && o ==3){
+    console.log('working')
+    
+  }
+  console.log(o.a)
+  
+
+</script>
+
+</body>
+</html>

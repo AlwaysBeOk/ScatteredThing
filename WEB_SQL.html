@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<!--
+openDatabase与android里面的sqlite差不多
+最好的选型存储
+-->
+
+<h1>opendatabse数据库操作</h1>
+
+<button id="btn-create">创建user数据表</button>
+<button id="btn-insert">插入数据</button>
+<button id="btn-query">查询数据</button>
+<button id="btn-update">修改数据</button>
+<button id="btn-delete">删除数据</button>
+<button id="btn-drop">删除user数据表</button>
+
+<script type="text/javascript">
+
+  let findId = id => document.getElementById(id);
+
+  //模拟一条user数据
+  let user = {
+    username: "liuqiangweqweqweqwqeasddasda",
+    password: "123569874",
+    info: "beaconApp开发团队中一员"
+  };
+
+  /**
+   * 创建数据库 或者此数据库已经存在 那么就是打开数据库
+   * name: 数据库名称
+   * version: 版本号
+   * displayName: 对数据库的描述
+   * estimatedSize: 设置数据的大小
+   * creationCallback: 回调函数(可省略)
+   */
+  let db = openDatabase("MySql", "1.0", "我的数据库描述", 1024 * 1024);
+  let result = db ? "数据库创建成功" : "数据库创建失败";
+  console.log(result);
+
+
+  const USER_TABLE_SQL = "create table if not exists userTable (id integer primary key autoincrement,username varchar(12)," +
+    "password varchar(16),info text)";
+
+  //创建数据表
+  function createTable() {
+    db.transaction(tx => {
+      tx.executeSql(USER_TABLE_SQL, [],
+      (tx, result) => {
+      alert('创建user表成功:' + result);
+  }, (tx, error) => {
+      alert('创建user表失败:' + error.message);
+    })
+  })
+  }
+
+  const INSERT_USER_SQL = "insert into userTable (username, password,info) values(?,?,?)";
+
+  //插入数据
+  function insertData(user) {
+    db.transaction(tx => {
+      tx.executeSql(INSERT_USER_SQL,
+      [user.username, user.password, user.info],
+      (tx, result) => {
+      alert('添加数据成功:');
+  }, (tx, error) => {
+      alert('添加数据失败:' + error.message);
+    })
+  })
+  }
+
+  const QUERY_USER_SQL = "select * from userTable";
+
+  //查询数据
+  function queryData() {
+    db.transaction(tx => {
+      tx.executeSql(QUERY_USER_SQL, [],
+      (tx, result) => {
+      console.log(result);
+  },
+    (tx, error) => {
+      console.log('查询失败: ' + error.message)
+    })
+  })
+  }
+
+  const UPDATE_USER_SQL = "update userTable set password = ? where username = ?";
+
+  //修改数据
+  function updateData(user) {
+    db.transaction(tx => {
+      tx.executeSql(UPDATE_USER_SQL, [user.password, user.username],
+      (tx, result) => {
+      alert("修改数据成功")
+  }, (tx, error) => {
+      alert("修改数据失败:" + error.message)
+    })
+  })
+  }
+
+  const DELETE_USER_SQL = "delete from userTable where username = ?";
+
+  //删除数据
+  function deleteData(user) {
+    db.transaction(tx => {
+      tx.executeSql(DELETE_USER_SQL, [user.username],
+      (transaction, resultSet) => {
+      alert("删除数据成功")
+  }, (transaction, error) => {
+      alert("删除数据失败:" + error.message)
+    })
+  });
+  }
+
+  const DROP_USER_SQL = "drop table userTable";
+
+  //删除数据表
+  function dropTable() {
+    db.transaction(tx => {
+      tx.executeSql(DROP_USER_SQL, [],
+      (transaction, resultSet) => {
+      alert("删除数据表成功")
+  }, (transaction, error) => {
+      alert("删除数据表失败:" + error.message)
+    })
+  })
+  }
+
+  /**
+   * 点击事件 增删查改
+   */
+  let btnCreate = findId("btn-create");
+  let btnInsert = findId("btn-insert");
+  let btnQuery = findId("btn-query");
+  let btnUpdate = findId("btn-update");
+  let btnDelete = findId("btn-delete");
+  let btnDrop = findId("btn-drop");
+  btnCreate.onclick = () => createTable();
+  btnInsert.onclick = () => insertData(user);
+  btnQuery.onclick = () => queryData();
+  btnUpdate.onclick = () => {
+    user.password = "111666666"; //修改密码
+    updateData(user);
+  };
+  btnDelete.onclick = () => deleteData(user);
+  btnDrop.onclick = () => dropTable();
+
+</script>
+</body>
+</html>
+
