@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  
+  <style>
+    .from, .to {
+      width: 240px;
+      height: 240px;
+      background-color: yellowgreen;
+    }
+    
+    .move {
+      width: 100px;
+      height: 100px;
+      background-color: red;
+    }
+  </style>
+</head>
+<body>
+<h3>从这个盒子</h3>
+<div class="from">
+  <div class="move" draggable="true"></div>
+</div>
+<h3>到这个盒子</h3>
+<div class="to"></div>
+</body>
+</html>
+
+<script>
+  var from = document.querySelector(".from");
+  var to = document.querySelector(".to");
+  var move = document.querySelector(".move");
+
+  // drag:拖， over：经过， 就是红盒子拖拽到它身上时会调用
+  //默认是不接受红盒子的，如果要想让它接收，需要禁用默认事件
+  to.ondragover = function(target) {
+    //禁用默认事件
+    target.preventDefault();
+  }
+
+  //drop： 放下， 松手
+  to.ondrop = function() {
+    to.appendChild(move);
+  }
+
+  from.ondragover = function(target) {
+    //禁用默认事件
+    target.preventDefault();
+  }
+
+  //drop： 放下， 松手
+  from.ondrop = function() {
+    from.appendChild(move);
+  }
+
+</script>
+
+<!--
+    1. 要想实现拖拽， 小盒子可允许拖拽，就需要给它添加一个 draggable=true的属性
+    2. 大盒子默认是不接受小盒子的，要想接受小盒子，需要监听 ondragover事件，并且阻止默认事件（默认不接收）
+    3. 当松手时（监听ondrop事件），将小盒子放到大盒子中
+ -->
+
