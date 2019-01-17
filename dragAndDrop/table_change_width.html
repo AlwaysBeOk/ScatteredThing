@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>可拖动表格</title>
+  <style>
+    table{
+      width: 100%;
+      border: 1px solid deeppink;
+      line-height: 56px;
+    }
+    
+    th{
+      position: relative;
+      /*width: 200px;*/
+      height: 30px;
+      text-align: center;
+      border-right: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+    }
+    
+    th span{
+      position: absolute;
+      width: 10px;
+      height: 100%;
+      bottom: 0;
+      right: -5px;
+      cursor: col-resize;
+      /*background-color: deepskyblue;*/
+      touch-action: none;
+      user-select: none;
+      z-index: 100;
+    }
+    
+    td{
+      min-width: 100px;
+      height: 30px;
+      text-align: center;
+      border-right: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+    }
+
+    th:last-child,td:last-child{
+      border-right: none;
+    }
+  </style>
+</head>
+<body>
+
+<div>
+  <table>
+    <thead>
+    <tr>
+      <th>
+        <div>第一列表头</div>
+        <span class="first"></span>
+      </th>
+      <th>
+        <div>第二列XX</div>
+        <span class="second"></span>
+      </th>
+      <th>
+        <div>第三列ooo</div>
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td class="first-resizable">第一列内容</td>
+      <td class="second-resizable">第二列内容</td>
+      <td class="third-resizable">第三列内容</td>
+    </tr>
+    <tr>
+      <td>第一列内容</td>
+      <td>第二列内容</td>
+      <td>第三列内容</td>
+    </tr>
+    <tr>
+      <td>第一列内容</td>
+      <td>第二列内容</td>
+      <td>第三列内容</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<script>
+  var eles = document.querySelectorAll('th span');
+  var ele = null, isDown = false, str;
+  
+      var x = 0 , y = 0 , l = 0 ,t = 0;
+      //鼠标按下事件
+      window.addEventListener('mousedown', function(e) {
+        ele = e.target;
+        //获取x坐标和y坐标
+        x = e.clientX;
+        y = e.clientY;
+
+        //获取左部和顶部的偏移量
+        l = ele.offsetLeft;
+        t = ele.offsetTop;
+
+        //开关打开
+        isDown = true;
+      },false);
+      
+      
+      //鼠标移动   这里监听window 就是防止滑动过快导致鼠标不在容器内造成的bug
+      window.addEventListener('mousemove', function(e) {
+        if (isDown == false) {
+          return;
+        }
+
+        //获取x和y
+        var nx = e.clientX;
+        var ny = e.clientY;
+        //计算移动后的左偏移量和顶部的偏移量
+        var nl = nx - (x - l);
+        var nt = ny - (y - t);
+
+        //若小于100px就设置固定为100px
+        nl <= 100 ? ele.style.left ='100px': ele.style.left = nl + 'px';
+
+        //若当大于父元素时，就设置福鼎为父元素宽度
+        str = Number(ele.style.left.toString().substring(0, ele.style.left.length-2));
+        str > ele.parentNode.offsetWidth? ele.style.left = ele.parentNode.offsetWidth -3 + 'px': '';
+        //设置当列标格和表头的宽度
+        var box = document.querySelector('.' + ele.className + '-resizable');
+        if(box.nodeType)
+        box.style.width = nl + 'px';
+        ele.parentNode.style.width = nl + 'px';
+      });
+      
+
+      //鼠标抬起事件
+      window.addEventListener('mouseup', function() {
+        //开关关闭
+        isDown = false;
+        
+      },false)
+    
+</script>
+</body>
+</html>
