@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>insert_sort</title>
+</head>
+<body>
+<script>
+  function insert_sort(arr) {
+    var temp, length = arr.length, j;
+    
+    for(var i = 1; i< length; i++) {
+      j = i;
+      temp = arr[i];
+      while (j> 0 && arr[j-1] > temp) {
+        arr[j] = arr[j-1];
+        j--;
+      }
+      
+      arr[j] = temp;
+    }
+    return arr;
+  }
+  
+  var array1 = [12,34,45,3,67,76,33,5,87,10,11];
+  
+  console.log(insert_sort(array1));
+</script>
+</body>
+</html>
