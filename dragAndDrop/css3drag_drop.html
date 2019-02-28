@@ -11,9 +11,11 @@
       width: 240px;
       height: 240px;
       background-color: yellowgreen;
+      position: relative;
     }
     
     .move {
+      position: absolute;
       width: 100px;
       height: 100px;
       background-color: red;
@@ -37,14 +39,25 @@
 
   // drag:拖， over：经过， 就是红盒子拖拽到它身上时会调用
   //默认是不接受红盒子的，如果要想让它接收，需要禁用默认事件
+  move.ondragstart = function (e) {
+    e.dataTransfer.effectAllowed = 'move'
+    console.log(e.dataTransfer);
+  }
+  
   to.ondragover = function(target) {
     //禁用默认事件
     target.preventDefault();
   }
 
+  to.ondropenter = function (e) {
+    target.preventDefault();
+    e.dataTransfer.dropEffect = 'move'
+  }
   //drop： 放下， 松手
-  to.ondrop = function() {
+  to.ondrop = function(e) {
     to.appendChild(move);
+
+    move.style.top = '30px'
   }
 
   from.ondragover = function(target) {
