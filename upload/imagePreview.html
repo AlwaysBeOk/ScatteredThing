@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<div>
+  <input type="file" id="upload" onchange="change()">
+</div>
+
+<script>
+  function change() {
+
+    // 检查是否支持FileReader对象
+    if (typeof FileReader != 'undefined') {
+
+      var acceptedTypes = {
+        'image/png': true,
+        'image/jpeg': true,
+        'image/gif': true,
+        'image/jpg': true
+      };
+
+      if (acceptedTypes[document.getElementById('upload').files[0].type] === true) {
+
+        var reader = new FileReader();
+
+        reader.onload = function (event) {
+
+          var image = new Image();
+
+          image.src = event.target.result;
+
+          image.width = 100;
+
+          document.body.appendChild(image);
+
+        };
+
+        reader.readAsDataURL(document.getElementById('upload').files[0]);
+
+      }
+
+    }
+  }
+  
+</script>
+</body>
+</html>
