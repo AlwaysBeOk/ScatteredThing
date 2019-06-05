@@ -2,116 +2,127 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>upload</title>
+  <style>
+    .wrapper{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .count{
+      margin-top: 20px;
+      width: 400px;
+      height: 8px;
+      line-height: 8px;
+      background-color: #eeeeee;
+    }
+    
+    .current{
+      display: inline-block;
+      height: 8px;
+      background-color: #00cc00;
+      transition: 0.5s;
+      text-align: center;
+      font-size: 12px;
+    }
+  </style>
 </head>
 <body>
-<form enctype="multipart/form-data" action="file.php" method="post">
-  <!--
-  <input type="file" name="pic" />
-  <div id="img"></div>
-  <input type="button" value="uploadimg" onclick="upimg();" /><br />
-  -->
-  <div id="upimg">
-    <div id="load"></div>
+
+<div class="wrapper">
+  <input id="file" type="file" onchange="window.upload()"/>
+  <div class="count">
+    <div class="current"></div>
   </div>
-  <input type="file" name="mof" multiple="multiple"/>
-  <input type="button" value="uploadfile" onclick="upfile();" />
-  <input type="submit" value="submit" />
-</form>
-<div id="test">
-  测试是否DIV消失
 </div>
-<script type="text/javascript">
-  var dom=document.getElementsByTagName('form')[0];
-  dom.onsubmit=function(){
-    //return false;
-  }
-  var xhr=new XMLHttpRequest();
-  var fd;
-  var des=document.getElementById('load');
-  var num=document.getElementById('upimg');
-  var file;
-  const LENGTH=10*1024*1024;
-  var start;
-  var end;
-  var blob;
-  var pecent;
-  var filename;
-  //var pending;
-  //var clock;
-  function upfile(){
-    start=0;
-    end=LENGTH+start;
-    //pending=false;
 
-    file=document.getElementsByName('mof')[0].files[0];
-    //filename = file.name;
-    if(!file){
-      alert('请选择文件');
-      return;
+
+<script>
+  (function(){
+    var start = 0,  // 文件片段开始点
+      length = 100,  // 文件片段size
+      end = start + length, // 文件片段结束点
+      count = 0,     // 文件总大小（size）
+      blob = null,   // 文件片段流
+      blobId = 1,     // 片段ID
+      isLastBlob = 0, // 是否已经将所有文件都上传完成 0 :未完成， 1: 完成
+      formData = null,  // formData实例
+      file = null,      // 当前选择的文件
+      xhr =null,
+      pecentElement = document.querySelector('.current');
+
+    window.upload = function upload () {
+      file = document.querySelector('#file').files[0];
+      count = file.size;
+      start = 0;
+      pecentElement.style.width = '0';
+      pecentElement.innerHTML = '';
+      up();
     }
-    //clock=setInterval('up()',1000);
-    up();
+    
+    function up() {
+      if(start < count) {
+        blob = file.slice(start, end);
+        if(start + length > count) {
+          isLastBlob = 1;
+        }
+        // 创建formData将数据append 进去，最后一起send到服务端。
+        formData = new FormData();
+        formData.append('blob', blob);
+        formData.append('fileName', file.name);
+        formData.append('blobId', blobId);
+        formData.append('isComplate', isLastBlob);
 
-  }
-
-  function up(){
-    /*
-    if(pending){
-     return;
+        // 写了两个方法， ajax 为ajax发送数据上传，simulateAjax 为模拟ajax上传，因为没有后端接口
+        // ajax(formData);
+        simulateAjax();
+      }
     }
-    */
-    if(start<file.size){
-      xhr.open('POST','file.php',true);
-      //xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
-      xhr.onreadystatechange=function(){
-        if(this.readyState==4){
-          if(this.status>=200&&this.status<300){
-            if(this.responseText.indexOf('failed') >= 0){
-              //alert(this.responseText);
-              alert('文件发送失败，请重新发送');
-              des.style.width='0%';
-              //num.innerHTML='';
-              //clearInterval(clock);
-            }else{
-              //alert(this.responseText)
-              // pending=false;
-              start=end;
-              end=start+LENGTH;
-              setTimeout('up()',1000);
-            }
-
-          }
+    
+    function ajax(formData){
+      xhr = new XMLHttpRequest();
+      xhr.open('xxxx/xxx', 'POST');
+      xhr.onload = function () {
+        if(xhr.status >= 200 && xhr.status < 300) {
+          calculatePecent();
+          up();
+        }else {
+          alert('upload filed!')
+          start = 0;
         }
       }
-      xhr.upload.onprogress=function(ev){
-        if(ev.lengthComputable){
-          pecent=100*(ev.loaded+start)/file.size;
-          if(pecent>100){
-            pecent=100;
-          }
-          //num.innerHTML=parseInt(pecent)+'%';
-          des.style.width=pecent+'%';
-          des.innerHTML = parseInt(pecent)+'%'
-        }
-      }
-
-      //分割文件核心部分slice
-      blob=file.slice(start,end);
-      fd=new FormData();
-      fd.append('mof',blob);
-      fd.append('test',file.name);
-      //console.log(fd);
-      //pending=true;
-      xhr.send(fd);
-    }else{
-      //clearInterval(clock);
+      xhr.send(formData);
     }
-  }
+    
+    function simulateAjax() {
+      new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(200);
+          //reject(500);
+        }, 2000)
+      }).then(() => {
+        calculatePecent();
+        up();
+      }, () => {
+        alert('upload filed!')
+        start = 0;
+      })
+    }
 
-  function change(){
-    des.style.width='0%';
-  }
+    function calculatePecent() {
+      // 成功之后片段开始等于上一次结束位置， 片段结束为开始位置加上片段长度
+      start = end;
+      end = start + length;
+      if(start > count){
+        start = count;
+        end = count
+      }
+      // 展示进度条，代表后台处理了多少
+      pecentElement.style.width = parseInt(start / count * 100) + '%';
+      pecentElement.innerHTML = parseInt(start / count * 100) + '%';
+    }
+  })()
 
 </script>
 </body>
