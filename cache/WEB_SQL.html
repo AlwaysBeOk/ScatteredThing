@@ -5,14 +5,6 @@
   <title>Title</title>
 </head>
 <body>
-
-<!--
-openDatabase与android里面的sqlite差不多
-最好的选型存储
--->
-
-<h1>opendatabse数据库操作</h1>
-
 <button id="btn-create">创建user数据表</button>
 <button id="btn-insert">插入数据</button>
 <button id="btn-query">查询数据</button>
@@ -26,8 +18,8 @@ openDatabase与android里面的sqlite差不多
 
   //模拟一条user数据
   let user = {
-    username: "liuqiangweqweqweqwqeasddasda",
-    password: "123569874",
+    username: "creatto",
+    password: "123123",
     info: "beaconApp开发团队中一员"
   };
 
@@ -46,6 +38,12 @@ openDatabase与android里面的sqlite差不多
 
   const USER_TABLE_SQL = "create table if not exists userTable (id integer primary key autoincrement,username varchar(12)," +
     "password varchar(16),info text)";
+  const INSERT_USER_SQL = "insert into userTable (username, password,info) values(?,?,?)";
+  const QUERY_USER_SQL = "select * from userTable";
+  const UPDATE_USER_SQL = "update userTable set password = ? where username = ?";
+  const DELETE_USER_SQL = "delete from userTable where username = ?";
+  const DROP_USER_SQL = "drop table userTable";
+
 
   //创建数据表
   function createTable() {
@@ -58,8 +56,6 @@ openDatabase与android里面的sqlite差不多
     })
   })
   }
-
-  const INSERT_USER_SQL = "insert into userTable (username, password,info) values(?,?,?)";
 
   //插入数据
   function insertData(user) {
@@ -74,7 +70,6 @@ openDatabase与android里面的sqlite差不多
   })
   }
 
-  const QUERY_USER_SQL = "select * from userTable";
 
   //查询数据
   function queryData() {
@@ -89,7 +84,6 @@ openDatabase与android里面的sqlite差不多
   })
   }
 
-  const UPDATE_USER_SQL = "update userTable set password = ? where username = ?";
 
   //修改数据
   function updateData(user) {
@@ -103,7 +97,6 @@ openDatabase与android里面的sqlite差不多
   })
   }
 
-  const DELETE_USER_SQL = "delete from userTable where username = ?";
 
   //删除数据
   function deleteData(user) {
@@ -117,7 +110,6 @@ openDatabase与android里面的sqlite差不多
   });
   }
 
-  const DROP_USER_SQL = "drop table userTable";
 
   //删除数据表
   function dropTable() {

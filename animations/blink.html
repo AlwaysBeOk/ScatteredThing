@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    .outer{
+      display: flex;
+      height: 400px;
+      width: 400px;
+      background-color: deepskyblue;
+    }
+    
+    .owner{
+      margin: auto;
+      height: 100px;
+      width: 100px;
+      background-color: deeppink;
+      border-radius: 50%;
+      animation: 1s blink 6 steps(1);
+    }
+    
+    @keyframes blink {
+      50% {
+        background-color: transparent;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="outer">
+  <div class="owner"></div>
+</div>
+</body>
+</html>
